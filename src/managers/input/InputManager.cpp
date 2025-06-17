@@ -322,7 +322,8 @@ void CInputManager::mouseMoveUnified(uint32_t time, bool refocus, bool mouse) {
                     const auto PWINDOW = HLSurface->getWindow();
                     surfacePos         = BOX->pos();
                     pFoundLayerSurface = HLSurface->getLayer();
-                    pFoundWindow       = !PWINDOW || PWINDOW->isHidden() ? g_pCompositor->m_lastWindow.lock() : PWINDOW;
+                    if (!pFoundLayerSurface)
+                        pFoundWindow       = !PWINDOW || PWINDOW->isHidden() ? g_pCompositor->m_lastWindow.lock() : PWINDOW;
                 } else // reset foundSurface, find one normally
                     foundSurface = nullptr;
             } else // reset foundSurface, find one normally
@@ -410,7 +411,6 @@ void CInputManager::mouseMoveUnified(uint32_t time, bool refocus, bool mouse) {
                     if (!foundSurface) {
                         if (pFoundWindow != PWINDOWIDEAL)
                             pFoundWindow = g_pCompositor->vectorToWindowUnified(mouseCoords, RESERVED_EXTENTS | INPUT_EXTENTS | ALLOW_FLOATING);
-
                         if (!(pFoundWindow && (pFoundWindow->m_isFloating && (pFoundWindow->m_createdOverFullscreen || pFoundWindow->m_pinned))))
                             pFoundWindow = PWORKSPACE->getFullscreenWindow();
                     }
